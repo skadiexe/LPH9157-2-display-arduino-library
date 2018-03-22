@@ -4,4 +4,4 @@ Based on existing [AVR C project](http://cxem.net/mc/mc221.php)
 Tested with 3.3v on ESP8266 and works fine
 
 ## Connection diagram:
-![connection diagram](lph9157-2 pinout.jpg)
+![connection diagram](/lph9157-2 pinout.jpg)
