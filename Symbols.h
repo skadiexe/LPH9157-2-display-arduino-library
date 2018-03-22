@@ -1,7 +1,7 @@
 ﻿/* pixels to be drawn from top to bottom, from left to right. 
 second half of the table is cyrillic*/
 
-uint8_t font_5x8[][5]  = {
+uint8_t font_5x8[][5] = {
 0x00, 0x00, 0x00, 0x00, 0x00,// (space)  32
 0x00, 0x00, 0x5F, 0x00, 0x00,// !        33
 0x00, 0x07, 0x00, 0x07, 0x00,// "        34
