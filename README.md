@@ -3,8 +3,7 @@ Based on existing [AVR C project](http://cxem.net/mc/mc221.php)
 
 Tested with 3.3v on ESP8266 and works fine
 ### Known issues:
-No buffering
-Try to use hardware reset if you sometimes got only white screen at powering on 
+No buffering<br>Try to use hardware reset if you sometimes got only white screen at powering on 
 
 ## Display pinout:
 ![display pinout](https://github.com/skadiexe/LPH9157-2-display-arduino-library/blob/master/lph9157-2%20pinout.jpg)
