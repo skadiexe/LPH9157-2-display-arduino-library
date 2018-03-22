@@ -7,16 +7,16 @@ Tested with 3.3v on ESP8266 and works fine
 ![display pinout](https://github.com/skadiexe/LPH9157-2-display-arduino-library/blob/master/lph9157-2%20pinout.jpg)
 
 <table>
-    <tr>
-        <td>#</td>
-        <td>Name</td>
-        <td>Function</td>
-    </tr>
-    <tr>
-    </tr>
+    	<tr><td>#</td><td>Name</td><td>Function</td></tr>
+   	<tr><td>1</td><td>RS</td><td>Low=CMD, High=DATA</td></tr>
+   	<tr><td>2</td><td></td><td></td></tr>
+    	<tr><td>3</td><td></td><td></td></tr>
+   	<tr><td>4</td><td></td><td></td></tr>
+	<tr><td></td><td></td><td></td></tr>
+	
+
 </table>
 	
-1	RS	Low=CMD, High=DATA
 2	~RST	Reset input, active low
 3	~CS	Chip select, active low
 4	SYNC	External frame synchorization input, unused by default
