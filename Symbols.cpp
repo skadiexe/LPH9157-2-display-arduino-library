@@ -1,5 +1,5 @@
-﻿/* С помощью этой таблицы пиксели выводить сверху-вниз, слево-  
- направо. Шрифт - 5х8 пикселей, разложен по кодам ASCII */
+﻿/* pixels to be drawn from top to bottom, from left to right. 
+second half of the table is cyrillic*/
 
 uint8_t font_5x8[][5]  = {
 0x00, 0x00, 0x00, 0x00, 0x00,// (space)  32

@@ -5,32 +5,37 @@
 //-----------------------------------------------------
 
 
-//#include <delay.h>
-#include "Symbols.h"
+#include "Symbols.cpp"
+#include "LPH91572.cpp"
 
-//#define _8_BIT_COLOR  //Если закомментировано - 16-ти битный цвет
-#define _GEOMETRICAL  //Использование функций вывода геометрических фигур
+// uncomment to use 8 bit colors
+//#define _8_BIT_COLOR
+
+// allow to use geometrical functions  
+#define _GEOMETRICAL  
+// uncomment to use additional reset pin
+//#define _USE_HARDWARE_RESET
 
 //===============================================================
 //		            Назначение выводов порта
 //===============================================================
-//#define LCD_CS 		PORTA.0 //Выбор чипа
-//#define LCD_RESET 	PORTA.0 //Сброс
-#define LCD_RS 		D0	//CD - тип передаваемых данных
-//#define LCD_CLK 	PORTA.3 //Синхронизация
-//#define LCD_DATA 	PORTA.4 //Данные
+
+#ifdef _USE_HARDWARE_RESET
+#define LCD_RESET B1 // hardware reset pin
+#endif
+
+#define LCD_RS 		D0	//RS pin (command/data select)
 
 //*************************************************************
-//Команда/Данные
+// command/data
 #define CMD 0
 #define DAT 1
+// to store previous RS value and not drive this pin while continious data streaming
 uint8_t RS_old;
 
-//===============================================================
-//     			    Определение цветов
-//===============================================================
+
 #ifdef _8_BIT_COLOR
-//8-ми битовая цветовая палитра (256 цветов)
+//8 bit color samples (256 colors)
 #define GREEN       0x1C
 #define DARK_GREEN  0x15
 #define RED         0xE0
@@ -44,42 +49,7 @@ uint8_t RS_old;
 #define GREY        0x6D
 
 #else
-//16-ти битовая цветовая палитра (65536 цветов)
-/*
-  enum LPH91572_color_16bit {
-  LPH91572_color_16bit_black = 0x0000,
-
-  LPH91572_color_16bit_green = 0x07E0,
-  LPH91572_color_16bit_gray = 0xE79C,
-  LPH91572_color_16bit_blue = 0x001F,
-  LPH91572_color_16bit_red = 0xF800,
-  LPH91572_color_16bit_sky = 0x5d1c,
-  LPH91572_color_16bit_yellow = 0xffe0,
-  LPH91572_color_16bit_cyan = 0x07ff,
-  LPH91572_color_16bit_orange = 0xfca0,
-  LPH91572_color_16bit_pink = 0xF97F,
-  LPH91572_color_16bit_brown = 0x8200,
-  LPH91572_color_16bit_violet = 0x9199,
-  LPH91572_color_16bit_silver = 0xa510,
-  LPH91572_color_16bit_gold = 0xa508,
-  LPH91572_color_16bit_begh = 0xf77b,
-  LPH91572_color_16bit_navy = 0x000F,
-  LPH91572_color_16bit_dark_green = 0x03E0,
-  LPH91572_color_16bit_
-  LPH91572_color_16bit_
-  LPH91572_color_16bit_
-  LPH91572_color_16bit_
-  LPH91572_color_16bit_
-  LPH91572_color_16bit_
-  LPH91572_color_16bit_
-  LPH91572_color_16bit_
-  LPH91572_color_16bit_
-  LPH91572_color_16bit_
-  LPH91572_color_16bit_
-
-  LPH91572_color_16bit_white = 0xFFFF
-  }
-*/
+//16 bit (RGB565) color samples (65536 colors)
 #define    BLACK                0x0000 //
 #define    WHITE                0xFFFF //
 #define    GRAY                 0xE79C //
@@ -108,7 +78,8 @@ uint8_t RS_old;
 #endif
 
 //*************************************************************
-//ПРОТОТИПЫ ФУНКЦИЙ
+//functions prototypes
+
 void LCD_init (void);
 void Send_to_lcd (uint8_t RS, uint8_t data);
 void SetArea (char x1, char x2, char y1, char y2);
@@ -137,7 +108,7 @@ void LCD_FillTriangleA (char x1, char y1, char x2, char y2, char x3, char y3, in
 #endif
 
 //===============================================================
-//                        ИНИЦИАЛИЗАЦИЯ
+//                        init
 //===============================================================
 void LCD_init(void)
 { SPI.begin();
@@ -146,20 +117,27 @@ void LCD_init(void)
   digitalWrite(SS, LOW);
   digitalWrite(LCD_RS, LOW);
 
-  Send_to_lcd(CMD, 0x01); //Программный сброс
-  Send_to_lcd(CMD, 0x36); //Memory Access Control (Направление заполнения области дисплея (памяти): 0bVHRXXXXX, V - заполнение по вертикали (0 - сверху-вниз, 1 - снизу-вверх),
-  //H - заполнение по горизонтали (0 - слева-направо, 1 - справа-налево), R - меняются местами строки и столбцы (при этом заполнение остается сверху-вниз, слева-направо))
-  Send_to_lcd(DAT, 0x00);
-  Send_to_lcd(CMD, 0x11); //Выход из спящего режима
+ #ifdef _USE_HARDWARE_RESET
+  pinMode(LCD_RESET, OUTPUT);
+  digitalWrite(LCD_RESET, LOW);
   delay(20);
-  Send_to_lcd(CMD, 0x3a); //Установка цветовой палитры
+  digitalWrite(LCD_RESET, HIGH);
+ #endif 
+
+  Send_to_lcd(CMD, 0x01); //soft reset
+  Send_to_lcd(CMD, 0x36); //Memory Access Control (Направление заполнения области дисплея (памяти): 0bVHRXXXXX, V - заполнение по вертикали (0 - сверху-вниз, 1 - снизу-вверх),
+                          //H - заполнение по горизонтали (0 - слева-направо, 1 - справа-налево), R - меняются местами строки и столбцы (при этом заполнение остается сверху-вниз, слева-направо))
+  Send_to_lcd(DAT, 0x00);
+  Send_to_lcd(CMD, 0x11); //wake up from sleep mode
+  delay(20);
+  Send_to_lcd(CMD, 0x3a); //set color mode
 #ifdef _8_BIT_COLOR
-  Send_to_lcd(DAT, 0x02); //Байт на пиксель 256 цветов
+  Send_to_lcd(DAT, 0x02); //256 colors
 #else
-  Send_to_lcd(DAT, 0x05); //Два байта на пиксель 65536 цветов
+  Send_to_lcd(DAT, 0x05); //65536 colors
 #endif
   delay(20);
-  Send_to_lcd(CMD, 0x29); //Включение дисплея
+  Send_to_lcd(CMD, 0x29); //power on display
 }
 
 //===============================================================
@@ -172,11 +150,19 @@ void Send_to_lcd (uint8_t RS, uint8_t data)
   if ((old_RS != RS) || (!RS && !old_RS)) {
     digitalWrite(LCD_RS, RS);
   }
-  SPI.beginTransaction(SPISettings(30000000L, MSBFIRST, SPI_MODE0));
+  // 30MHz is maximum for that display
+  // standart speed is 13MHz
+
+#if defined(__AVR__)
+SPI.beginTransaction(SPISettings(10000000L, MSBFIRST, SPI_MODE0));
+#elif defined(ESP8266)
+SPI.beginTransaction(SPISettings(30000000L, MSBFIRST, SPI_MODE0));
+#endif
 
   SPI.transfer(data);
-  delayMicroseconds(5);
-  //digitalWrite(SS, HIGH);
+  // removed for better speed
+  // delayMicroseconds(5);
+  //digitalWrite(SS, HIGH); 
   SPI.endTransaction();
 }
 
