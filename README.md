@@ -8,11 +8,14 @@ Tested with 3.3v on ESP8266 and works fine
 
 <table>
     <tr>
-        <td>Foo</td>
+        <td>#</td>
+        <td>Name</td>
+        <td>Function</td>
+    </tr>
+    <tr>
     </tr>
 </table>
-
-#	Name	Function
+	
 1	RS	Low=CMD, High=DATA
 2	~RST	Reset input, active low
 3	~CS	Chip select, active low
