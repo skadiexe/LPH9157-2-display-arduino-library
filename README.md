@@ -39,7 +39,6 @@ void setup() {
 }
   
 void loop() {
-  LCD_FillScreen (WHITE);
   LCD_Puts_Shadow("Hello!", 10, 60, GREEN,  2, 2, 90); 
   delay(50);
 }
