@@ -43,6 +43,14 @@ void LCD_init(void)
   delay(10);
   Send_to_lcd(CMD, 0x29); //power on display
   delay(10);
+  // 30MHz is maximum for that display
+  // standart speed is 13MHz
+
+#if defined(__AVR__)
+  SPI.beginTransaction(SPISettings(15000000L, MSBFIRST, SPI_MODE0));
+#elif defined(ESP8266)
+  SPI.beginTransaction(SPISettings(30000000L, MSBFIRST, SPI_MODE0));
+#endif
 }
 
 //===============================================================
@@ -55,20 +63,13 @@ void Send_to_lcd (uint8_t RS, uint8_t data)
   if ((old_RS != RS) || (!RS && !old_RS)) {
     digitalWrite(LCD_RS, RS);
   }
-  // 30MHz is maximum for that display
-  // standart speed is 13MHz
-
-#if defined(__AVR__)
-SPI.beginTransaction(SPISettings(15000000L, MSBFIRST, SPI_MODE0));
-#elif defined(ESP8266)
-SPI.beginTransaction(SPISettings(30000000L, MSBFIRST, SPI_MODE0));
-#endif
+  
 
   SPI.transfer(data);
   // removed for better speed
   // delayMicroseconds(5);
   //digitalWrite(SS, HIGH); 
-  SPI.endTransaction();
+ // SPI.endTransaction();
 }
 
 

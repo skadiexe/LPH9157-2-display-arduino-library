@@ -14,5 +14,6 @@ void loop() {
 
   LCD_Puts_Shadow("Hello", 4, 60, WHITE,  2, 2, 90);
   LCD_Puts_Shadow("Hello", 4, 90, BLACK,  1, 1, 90);
+  delay(2000);
 
 }
