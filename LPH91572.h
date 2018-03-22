@@ -154,7 +154,7 @@ void Send_to_lcd (uint8_t RS, uint8_t data)
   // standart speed is 13MHz
 
 #if defined(__AVR__)
-SPI.beginTransaction(SPISettings(10000000L, MSBFIRST, SPI_MODE0));
+SPI.beginTransaction(SPISettings(20000000L, MSBFIRST, SPI_MODE0));
 #elif defined(ESP8266)
 SPI.beginTransaction(SPISettings(30000000L, MSBFIRST, SPI_MODE0));
 #endif
