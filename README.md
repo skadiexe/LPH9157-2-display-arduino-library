@@ -31,16 +31,15 @@ Tested with 3.3v on ESP8266 and works fine
 #include "LPH91572.h"
 
 void setup() {
-  
   LCD_init();
   LCD_FillScreen (WHITE);
   
-  }
+}
   
 void loop() {
-LCD_FillScreen (WHITE);
-LCD_Puts_Shadow("Hello!", 10, 60, GREEN,  2, 2, 90); 
-delay(50);
+  LCD_FillScreen (WHITE);
+  LCD_Puts_Shadow("Hello!", 10, 60, GREEN,  2, 2, 90); 
+  delay(50);
 }
 
 ```
