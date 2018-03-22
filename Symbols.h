@@ -1,6 +1,9 @@
 ﻿/* pixels to be drawn from top to bottom, from left to right. 
 second half of the table is cyrillic*/
 
+#ifndef __SYMBOLS_H__
+#define __SYMBOLS_H__
+
 uint8_t font_5x8[][5] = {
 0x00, 0x00, 0x00, 0x00, 0x00,// (space)  32
 0x00, 0x00, 0x5F, 0x00, 0x00,// !        33
@@ -163,3 +166,5 @@ uint8_t font_5x8[][5] = {
 124, 16, 56, 68, 56,         // ю        254
 72, 52, 20, 20, 124          // я        255
 };
+
+#endif
