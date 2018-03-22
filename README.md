@@ -28,6 +28,7 @@ No buffering<br>Try to use hardware reset if you sometimes got only white screen
 ![connection diagram](https://github.com/skadiexe/LPH9157-2-display-arduino-library/blob/master/connection%20diagram.png)
 
 ## Usage:
+Specify LCD_RS pin (and optionally -- LCD_RESET) in LPH91572.h
 
 ```Arduino
 #include "LPH91572.h"
